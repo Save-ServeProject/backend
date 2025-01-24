@@ -1,22 +1,47 @@
 package com.example.saveandserve.demo.entity;
+import jakarta.persistence.*;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@jakarta.persistence.Entity
-@jakarta.persistence.Table(name = "empresa")
+@Entity
+@Table(name = "empresas")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Empresa {
-    @jakarta.persistence.Id
-    public String idEmpresa;
-    public String nombreEmpresa;
-    public String tipoEmpresa;
-    public String telefonoEmpresa;
-    public String emailEmpresa;
-    public String suscripcion;
-    public String cifEmpresa;
-    public String direccionEmpresa;
-    public String ciudadEmpresa;
-    public String contraseñaEmpresa;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long idEmpresa;
+
+    @Column(nullable = false, length = 100)
+    private String nombre;
+
+    @Column(unique = true, nullable = false, length = 100)
+    private String email;
+
+    @Column(length = 200)
+    private String direccion;
+
+    @Column(length = 15)
+    private String telefono;
+
+    @Column(nullable = false )
+    private String cif;
+
+    @Column(nullable = false)
+    private String contrasenia;
+
+    private String tipo;
+    private String ciudad;
+
+    public static enum Suscripcion {
+        ADMIN,
+        USER,
+        GUEST
+    }
+
+    @Enumerated(EnumType.STRING)
+    private Suscripcion suscripcion;    
 }
 
+//devuelvo una respuesta http con responseEntity
