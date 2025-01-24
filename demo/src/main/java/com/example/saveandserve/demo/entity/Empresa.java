@@ -1,4 +1,6 @@
 package com.example.saveandserve.demo.entity;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,6 +44,10 @@ public class Empresa {
 
     @Enumerated(EnumType.STRING)
     private Suscripcion suscripcion;    
+
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Donacion> donaciones;
 }
 
 //devuelvo una respuesta http con responseEntity

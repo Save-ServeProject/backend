@@ -23,7 +23,7 @@ public class Producto {
     private String idProducto;
 
     @Column(nullable = false)
-    private String precioUnitario; 
+    private String precio; 
 
     public enum TipoProducto {
         SECO,
