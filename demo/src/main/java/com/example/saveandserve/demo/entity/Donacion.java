@@ -36,10 +36,27 @@ public class Donacion {
     @Column(nullable = false)
     private EstadoEnvio estadoEnvio;
 
-    @OneToMany(mappedBy = "donacionPadre", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Donacion> subdonaciones; 
+    // Relación reflexiva 1:N: Una donación puede tener muchas donaciones relacionadas
+    @OneToMany(mappedBy = "donacionPrincipal")
+    private List<Donacion> donacionesRelacionadas;
+
+    // Relación inversa: Una donación puede estar relacionada con una donación principal
+    @ManyToOne
+    @JoinColumn(name = "id_donacion_principal") // Columna que almacena la referencia
+    private Donacion donacionPrincipal;
     
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
+
+    @OneToMany(mappedBy = "donacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LineaProducto> lineasProducto;
+
+    @ManyToOne
+    @JoinColumn(name = "banco_de_alimentos_id", nullable = false)
+    private BancoDeAlimentos bancoDeAlimentos;
+
+    @ManyToOne
+    @JoinColumn(name = "transporte_id", nullable = false)
+    private Transporte transporte;
 }

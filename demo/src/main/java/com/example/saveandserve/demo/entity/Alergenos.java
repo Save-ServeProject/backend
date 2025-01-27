@@ -1,5 +1,7 @@
 package com.example.saveandserve.demo.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +21,7 @@ public class Alergenos {
     
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
+
+    @ManyToMany(mappedBy = "alergenos")
+    private Set<Producto> productos;
 }

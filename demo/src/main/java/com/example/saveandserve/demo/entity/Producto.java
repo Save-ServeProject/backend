@@ -1,5 +1,8 @@
 package com.example.saveandserve.demo.entity;
 
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,4 +37,20 @@ public class Producto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoProducto tipoProducto; 
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LineaProducto> lineaProducto;
+
+    @ManyToMany
+    @JoinTable(
+        name = "producto_alergeno",
+        joinColumns = @JoinColumn(name = "producto_id"),
+        inverseJoinColumns = @JoinColumn(name = "alergeno_id")
+    )
+    private Set<Alergenos> alergenos;
+
+    @ManyToOne
+    @JoinColumn(name = "tipo_transporte_id", nullable = false)
+    private TipoTransporte tipoTransporte;
+    
 }

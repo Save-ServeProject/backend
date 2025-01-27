@@ -1,4 +1,6 @@
 package com.example.saveandserve.demo.entity;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +35,8 @@ public class BancoDeAlimentos {
     @Column(nullable = false)
     private String contrasenia;
 
+    @OneToMany(mappedBy = "bancoDeAlimentos", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Donacion> donaciones;
     
 }
 
