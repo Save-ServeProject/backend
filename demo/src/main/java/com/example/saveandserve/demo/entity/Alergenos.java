@@ -22,6 +22,9 @@ public class Alergenos {
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
+    @Column(nullable = false, length = 100)
+    private String imagen;
+
     @ManyToMany(mappedBy = "alergenos")
     private Set<Producto> productos;
 }
