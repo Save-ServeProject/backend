@@ -8,8 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.example.saveandserve.demo.entity.BancoDeAlimentos;
 import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
+import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
 
 @SpringBootApplication
@@ -20,7 +22,7 @@ public class DemoApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository) {
+    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
@@ -35,8 +37,23 @@ public class DemoApplication {
                     new Empresa(null, "Empresa 9", "empresa9@example.com", "Calle Ficticia 9, Ciudad 9", "123-456-7898", "CIF12345686", "contrasenia9", "Tipo9", "Ciudad 9", Suscripcion.GUEST, null),
                     new Empresa(null, "Empresa 10", "empresa10@example.com", "Calle Ficticia 10, Ciudad 10", "123-456-7899", "CIF12345687", "contrasenia10", "Tipo10", "Ciudad 10", Suscripcion.ADMIN, null)
                 );
-
                 empresaRepository.saveAll(empresas);
+            }
+
+            if (bancoDeAlimentosRepository.count() == 0) {
+                List<BancoDeAlimentos> bancos = Arrays.asList(
+                    new BancoDeAlimentos(null, "Banco de Alimentos 1", "Calle Solidaria 1, Ciudad 1", "111-111-1111", "banco1@example.com", "Ciudad 1", "password1", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 2", "Calle Solidaria 2, Ciudad 2", "222-222-2222", "banco2@example.com", "Ciudad 2", "password2", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 3", "Calle Solidaria 3, Ciudad 3", "333-333-3333", "banco3@example.com", "Ciudad 3", "password3", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 4", "Calle Solidaria 4, Ciudad 4", "444-444-4444", "banco4@example.com", "Ciudad 4", "password4", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 5", "Calle Solidaria 5, Ciudad 5", "555-555-5555", "banco5@example.com", "Ciudad 5", "password5", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 6", "Calle Solidaria 6, Ciudad 6", "666-666-6666", "banco6@example.com", "Ciudad 6", "password6", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 7", "Calle Solidaria 7, Ciudad 7", "777-777-7777", "banco7@example.com", "Ciudad 7", "password7", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 8", "Calle Solidaria 8, Ciudad 8", "888-888-8888", "banco8@example.com", "Ciudad 8", "password8", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 9", "Calle Solidaria 9, Ciudad 9", "999-999-9999", "banco9@example.com", "Ciudad 9", "password9", null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos 10", "Calle Solidaria 10, Ciudad 10", "101-101-1010", "banco10@example.com", "Ciudad 10", "password10", null)
+                );
+                bancoDeAlimentosRepository.saveAll(bancos);
             }
         };
     }
