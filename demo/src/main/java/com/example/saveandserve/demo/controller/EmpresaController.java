@@ -1,0 +1,55 @@
+package com.example.saveandserve.demo.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.saveandserve.demo.entity.Empresa;
+import com.example.saveandserve.demo.service.EmpresaService;
+
+@RestController
+@RequestMapping("/empresas")
+public class EmpresaController {
+
+    @Autowired
+    private EmpresaService empresaService;
+
+    @GetMapping
+    public ResponseEntity<List<Empresa>> obtenerEmpresas() {
+        List<Empresa> empresas = empresaService.obtenerTodas();
+        return empresas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(empresas);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Empresa> obtenerEmpresaPorId(@PathVariable Long id) {
+        Optional<Empresa> empresa = empresaService.obtenerPorId(id);
+        return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Empresa> registrarEmpresa(@RequestBody Empresa empresa) {
+        Empresa nuevaEmpresa = empresaService.guardar(empresa);
+        return ResponseEntity.ok(nuevaEmpresa);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaActualizada) {
+        Optional<Empresa> empresa = empresaService.actualizar(id, empresaActualizada);
+        return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarEmpresa(@PathVariable Long id) {
+        boolean eliminado = empresaService.eliminar(id);
+        return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginEmpresa(@RequestParam String email, @RequestParam String password) {
+        boolean autenticado = empresaService.autenticar(email, password);
+        return autenticado ? ResponseEntity.ok("Login exitoso") : ResponseEntity.status(401).body("Credenciales incorrectas");
+    }
+}
