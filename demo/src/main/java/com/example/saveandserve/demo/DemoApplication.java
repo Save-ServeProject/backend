@@ -1,7 +1,10 @@
 package com.example.saveandserve.demo;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,9 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
+import com.example.saveandserve.demo.entity.Donacion;
+import com.example.saveandserve.demo.entity.Donacion.EstadoEnvio;
 import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
+import com.example.saveandserve.demo.entity.Transporte;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
+import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
 
 @SpringBootApplication
@@ -22,7 +29,7 @@ public class DemoApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository) {
+    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
@@ -55,6 +62,58 @@ public class DemoApplication {
                 );
                 bancoDeAlimentosRepository.saveAll(bancos);
             }
+
+
+            //ejemplo de donacion
+            // if (donacionRepository.count() == 0) {
+            //     // Buscar una empresa existente
+            //     Optional<Empresa> empresaOpt = empresaRepository.findById(1L);
+            //     Optional<BancoDeAlimentos> bancoOpt = bancoDeAlimentosRepository.findById(1L);
+            //     Optional<Transporte> transporteOpt = transporteRepository.findById(1L);
+
+            //     if (empresaOpt.isPresent() && bancoOpt.isPresent() && transporteOpt.isPresent()) {
+            //         Empresa empresa = empresaOpt.get();
+            //         BancoDeAlimentos banco = bancoOpt.get();
+            //         Transporte transporte = transporteOpt.get();
+
+            //         // Crear dos donaciones de ejemplo
+            //         Donacion donacion1 = new Donacion(
+            //             null,                      // idDonacion (autogenerado)
+            //             new BigDecimal("500.00"),  // totalDonacion
+            //             LocalDate.now(),           // fechaEntrega
+            //             EstadoEnvio.PENDIENTE,     // estadoEnvio
+            //             null,                      // donacionesRelacionadas
+            //             null,                      // donacionPrincipal
+            //             empresa,                   // empresa
+            //             null,                      // lineasProducto (se pueden agregar después)
+            //             banco,                     // bancoDeAlimentos
+            //             transporte                 // transporte
+            //         );
+
+            //         Donacion donacion2 = new Donacion(
+            //             null,
+            //             new BigDecimal("750.00"),
+            //             LocalDate.now().plusDays(3),
+            //             EstadoEnvio.ENVIADO,
+            //             null,
+            //             null,
+            //             empresa,
+            //             null,
+            //             banco,
+            //             transporte
+            //         );
+
+            //         // Guardar las donaciones en la base de datos
+            //         donacionRepository.save(donacion1);
+            //         donacionRepository.save(donacion2);
+
+            //         System.out.println("✅ Donaciones de ejemplo insertadas en la base de datos.");
+            //     } else {
+            //         System.out.println("⚠️ No se encontraron empresa, banco o transporte para asociar a las donaciones.");
+            //     }
+            // }
+
+
         };
     }
 }
