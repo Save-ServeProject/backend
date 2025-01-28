@@ -47,4 +47,6 @@ public class ProductoController {
         productoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    //SOY B ELEN
 }
