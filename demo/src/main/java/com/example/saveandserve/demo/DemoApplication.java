@@ -120,15 +120,7 @@ public class DemoApplication {
             //         System.out.println("⚠️ No se encontraron empresa, banco o transporte para asociar a las donaciones.");
             //     }
             // }
-
-            if (tipoTransporteRepository.count() == 0) { 
-                List<TipoTransporte> tipos = Arrays.asList(
-                    new TipoTransporte(null, "SECO", null, null),
-                    new TipoTransporte(null, "REFRIGERADO", null, null),
-                    new TipoTransporte(null, "CONGELADO", null, null)
-                );
-                tipoTransporteRepository.saveAll(tipos);
-            }
+            
 
 
             if (alergenosRepository.count() == 0) { 
@@ -150,20 +142,34 @@ public class DemoApplication {
                 );
                 alergenosRepository.saveAll(alergenos);
             }
-
-            if (transporteRepository.count() == 0) {
-                List<Transporte> empresasReparto = Arrays.asList(
-                    new Transporte(null, "Logística Rápida","refrigerado"),
-                    new Transporte(null, "Frío Express", HashSet.of("refrigerado", "congelado")),
-                    new Transporte(null, "Carga Segura", HashSet.of("seco")),
-                    new Transporte(null, "Reparto Congelados", HashSet.of("congelado")),
-                    new Transporte(null, "Distribuciones Globales", HashSet.of("seco", "refrigerado", "congelado"))
-                );
-    
-                transporteRepository.saveAll(empresasReparto);
-            }
             
+            // 1️⃣ Guardar tipos de transporte si no existen
+            if (tipoTransporteRepository.count() == 0) { 
+                List<TipoTransporte> tipos = Arrays.asList(
+                    new TipoTransporte(null, "SECO", null, null),
+                    new TipoTransporte(null, "REFRIGERADO", null, null),
+                    new TipoTransporte(null, "CONGELADO", null, null)
+                );
+                tipoTransporteRepository.saveAll(tipos);
+            }
 
+            // 2️⃣ Recuperar los tipos guardados de la BD
+            List<TipoTransporte> tiposGuardados = tipoTransporteRepository.findAll();
+            TipoTransporte seco = tiposGuardados.stream().filter(t -> t.getTipo().equals("SECO")).findFirst().orElseThrow();
+            TipoTransporte refrigerado = tiposGuardados.stream().filter(t -> t.getTipo().equals("REFRIGERADO")).findFirst().orElseThrow();
+            TipoTransporte congelado = tiposGuardados.stream().filter(t -> t.getTipo().equals("CONGELADO")).findFirst().orElseThrow();
+
+            // 3️⃣ Guardar transportes asegurando que los sets son mutables
+            if (transporteRepository.count() == 0) {
+                List<Transporte> transportes = Arrays.asList(
+                    new Transporte(null, "Transporte Express", new HashSet<>(Arrays.asList(seco, refrigerado))),
+                    new Transporte(null, "Logística Segura", new HashSet<>(Arrays.asList(seco))),
+                    new Transporte(null, "Envíos Fríos", new HashSet<>(Arrays.asList(refrigerado, congelado))),
+                    new Transporte(null, "Cargas Rápidas", new HashSet<>(Arrays.asList(seco, refrigerado, congelado))),
+                    new Transporte(null, "Distribuciones Premium", new HashSet<>(Arrays.asList(refrigerado)))
+                );
+                transporteRepository.saveAll(transportes);
+            }
         };
     }
 }
