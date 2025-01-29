@@ -3,8 +3,10 @@ package com.example.saveandserve.demo;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,6 +26,7 @@ import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
 import com.example.saveandserve.demo.repository.TipoTransporteRepository;
+import com.example.saveandserve.demo.repository.TransporteRepository;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -34,7 +37,7 @@ public class DemoApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository,
-    TipoTransporteRepository tipoTransporteRepository, AlergenosRepository alergenosRepository) {
+    TipoTransporteRepository tipoTransporteRepository, AlergenosRepository alergenosRepository, TransporteRepository transporteRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
@@ -146,6 +149,18 @@ public class DemoApplication {
                     new Alergenos(null, "Moluscos", "moluscos.png", null)
                 );
                 alergenosRepository.saveAll(alergenos);
+            }
+
+            if (transporteRepository.count() == 0) {
+                List<Transporte> empresasReparto = Arrays.asList(
+                    new Transporte(null, "Logística Rápida","refrigerado"),
+                    new Transporte(null, "Frío Express", HashSet.of("refrigerado", "congelado")),
+                    new Transporte(null, "Carga Segura", HashSet.of("seco")),
+                    new Transporte(null, "Reparto Congelados", HashSet.of("congelado")),
+                    new Transporte(null, "Distribuciones Globales", HashSet.of("seco", "refrigerado", "congelado"))
+                );
+    
+                transporteRepository.saveAll(empresasReparto);
             }
             
 

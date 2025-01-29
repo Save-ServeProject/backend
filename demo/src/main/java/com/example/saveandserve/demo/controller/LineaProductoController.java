@@ -35,8 +35,13 @@ public class LineaProductoController {
     }
 
     @PostMapping
-    public LineaProducto saveLineaProducto(@RequestBody LineaProducto lineaProducto) {
-        return lineaProductoService.saveLineaProducto(lineaProducto);
+    public ResponseEntity<LineaProducto> saveLineaProducto(@RequestBody LineaProducto lineaProducto) {
+        // Verifica si el producto existe o lo crea si no existe
+        lineaProducto.setProducto(lineaProductoService.verificarOCrearProducto(lineaProducto.getProducto()));
+    
+        // Guarda la línea de producto con el producto asegurado en la base de datos
+        LineaProducto nuevaLineaProducto = lineaProductoService.saveLineaProducto(lineaProducto);
+        return ResponseEntity.ok(nuevaLineaProducto);
     }
 
     @DeleteMapping("/{id}")

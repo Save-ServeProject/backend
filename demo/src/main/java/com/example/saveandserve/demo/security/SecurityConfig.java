@@ -12,7 +12,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/","/h2-console/**").permitAll()
+                .requestMatchers("/**","/h2-console/**").permitAll()
                 .anyRequest().permitAll()
             )
             .csrf(csrf -> csrf.disable())

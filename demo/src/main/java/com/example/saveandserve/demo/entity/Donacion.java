@@ -20,7 +20,7 @@ public class Donacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDonacion;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private BigDecimal totalDonacion;
 
     @Column(nullable = false)
