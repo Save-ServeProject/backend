@@ -11,15 +11,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.example.saveandserve.demo.entity.Alergenos;
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
 import com.example.saveandserve.demo.entity.Donacion;
 import com.example.saveandserve.demo.entity.Donacion.EstadoEnvio;
 import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
+import com.example.saveandserve.demo.entity.TipoTransporte;
 import com.example.saveandserve.demo.entity.Transporte;
+import com.example.saveandserve.demo.repository.AlergenosRepository;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
+import com.example.saveandserve.demo.repository.TipoTransporteRepository;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -29,7 +33,8 @@ public class DemoApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository) {
+    CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository,
+    TipoTransporteRepository tipoTransporteRepository, AlergenosRepository alergenosRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
@@ -113,6 +118,36 @@ public class DemoApplication {
             //     }
             // }
 
+            if (tipoTransporteRepository.count() == 0) { 
+                List<TipoTransporte> tipos = Arrays.asList(
+                    new TipoTransporte(null, "SECO", null, null),
+                    new TipoTransporte(null, "REFRIGERADO", null, null),
+                    new TipoTransporte(null, "CONGELADO", null, null)
+                );
+                tipoTransporteRepository.saveAll(tipos);
+            }
+
+
+            if (alergenosRepository.count() == 0) { 
+                List<Alergenos> alergenos = Arrays.asList(
+                    new Alergenos(null, "Gluten", "gluten.png", null),
+                    new Alergenos(null, "Crustáceos", "crustaceos.png", null),
+                    new Alergenos(null, "Huevos", "huevos.png", null),
+                    new Alergenos(null, "Pescado", "pescado.png", null),
+                    new Alergenos(null, "Cacahuetes", "cacahuetes.png", null),
+                    new Alergenos(null, "Soja", "soja.png", null),
+                    new Alergenos(null, "Lácteos", "lacteos.png", null),
+                    new Alergenos(null, "Frutos de cáscara", "frutos_cascara.png", null),
+                    new Alergenos(null, "Apio", "apio.png", null),
+                    new Alergenos(null, "Mostaza", "mostaza.png", null),
+                    new Alergenos(null, "Granos de sésamo", "sesamo.png", null),
+                    new Alergenos(null, "Dióxido de azufre y sulfitos", "sulfitos.png", null),
+                    new Alergenos(null, "Altramuces", "altramuces.png", null),
+                    new Alergenos(null, "Moluscos", "moluscos.png", null)
+                );
+                alergenosRepository.saveAll(alergenos);
+            }
+            
 
         };
     }
