@@ -3,6 +3,9 @@ package com.example.saveandserve.demo.entity;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,6 +46,7 @@ public class Producto {
     private TipoProducto tipoProducto; 
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<LineaProducto> lineaProducto;
 
     @ManyToMany

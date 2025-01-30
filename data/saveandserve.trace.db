@@ -97,3 +97,7 @@ Wrong user name or password [28000-232]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 91 more
+2025-01-30 13:03:44.445977+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM DONACION BANCOS_DE_ALIMENTOS [*]DONACION"
+Syntax error in SQL statement "SELECT * FROM DONACION BANCOS_DE_ALIMENTOS [*]DONACION"; SQL statement:
+SELECT * FROM DONACION BANCOS_DE_ALIMENTOS DONACION [42000-232]
