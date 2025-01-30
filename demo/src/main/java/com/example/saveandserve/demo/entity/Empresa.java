@@ -1,6 +1,7 @@
 package com.example.saveandserve.demo.entity;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -49,7 +50,7 @@ public class Empresa {
 
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference
     private List<Donacion> donaciones;
 }
 

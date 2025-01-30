@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -49,10 +50,10 @@ public class Donacion {
     
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
+    @JsonManagedReference  
     private Empresa empresa;
 
     @OneToMany(mappedBy = "donacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<LineaProducto> lineasProducto;
 
     @ManyToOne
