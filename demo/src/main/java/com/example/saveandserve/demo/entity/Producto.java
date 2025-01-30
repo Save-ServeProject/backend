@@ -28,6 +28,11 @@ public class Producto {
     @Column(nullable = false)
     private String precio; 
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoTransporte tipoTransporte;
+
+
     public enum TipoProducto {
         SECO,
         REFRIGERADO,
@@ -49,8 +54,6 @@ public class Producto {
     )
     private Set<Alergenos> alergenos;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_transporte_id", nullable = false)
-    private TipoTransporte tipoTransporte;
+
     
 }

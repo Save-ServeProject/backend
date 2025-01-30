@@ -1,5 +1,6 @@
 package com.example.saveandserve.demo.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -8,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "transporte") 
+@Table(name = "transporte")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,13 +22,9 @@ public class Transporte {
     @Column(nullable = false, length = 100)
     private String nombreTransporte;
 
-    @ManyToMany
-    @JoinTable(
-        name = "transporte_tipo",
-        joinColumns = @JoinColumn(name = "transporte_id"),
-        inverseJoinColumns = @JoinColumn(name = "tipo_transporte_id")
-    )
-    private Set<TipoTransporte> tipoTransporte;
-
-
+    @ElementCollection(targetClass = TipoTransporte.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "transporte_tipos", joinColumns = @JoinColumn(name = "transporte_id"))
+    @Enumerated(EnumType.STRING) // Usa STRING en lugar de ORDINAL
+    @Column(name = "tipo_transporte")
+    private Set<TipoTransporte> tipoTransporte = new HashSet<>();
 }

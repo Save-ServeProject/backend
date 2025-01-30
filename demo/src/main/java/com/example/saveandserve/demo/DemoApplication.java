@@ -18,14 +18,13 @@ import com.example.saveandserve.demo.entity.BancoDeAlimentos;
 import com.example.saveandserve.demo.entity.Donacion;
 import com.example.saveandserve.demo.entity.Donacion.EstadoEnvio;
 import com.example.saveandserve.demo.entity.Empresa;
-import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
 import com.example.saveandserve.demo.entity.TipoTransporte;
+import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
 import com.example.saveandserve.demo.entity.Transporte;
 import com.example.saveandserve.demo.repository.AlergenosRepository;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
-import com.example.saveandserve.demo.repository.TipoTransporteRepository;
 import com.example.saveandserve.demo.repository.TransporteRepository;
 
 @SpringBootApplication
@@ -37,7 +36,7 @@ public class DemoApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository,
-    TipoTransporteRepository tipoTransporteRepository, AlergenosRepository alergenosRepository, TransporteRepository transporteRepository) {
+     AlergenosRepository alergenosRepository, TransporteRepository transporteRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
@@ -143,30 +142,11 @@ public class DemoApplication {
                 alergenosRepository.saveAll(alergenos);
             }
             
-            // 1️⃣ Guardar tipos de transporte si no existen
-            if (tipoTransporteRepository.count() == 0) { 
-                List<TipoTransporte> tipos = Arrays.asList(
-                    new TipoTransporte(null, "SECO", null, null),
-                    new TipoTransporte(null, "REFRIGERADO", null, null),
-                    new TipoTransporte(null, "CONGELADO", null, null)
-                );
-                tipoTransporteRepository.saveAll(tipos);
-            }
-
-            // 2️⃣ Recuperar los tipos guardados de la BD
-            List<TipoTransporte> tiposGuardados = tipoTransporteRepository.findAll();
-            TipoTransporte seco = tiposGuardados.stream().filter(t -> t.getTipo().equals("SECO")).findFirst().orElseThrow();
-            TipoTransporte refrigerado = tiposGuardados.stream().filter(t -> t.getTipo().equals("REFRIGERADO")).findFirst().orElseThrow();
-            TipoTransporte congelado = tiposGuardados.stream().filter(t -> t.getTipo().equals("CONGELADO")).findFirst().orElseThrow();
-
-            // 3️⃣ Guardar transportes asegurando que los sets son mutables
             if (transporteRepository.count() == 0) {
                 List<Transporte> transportes = Arrays.asList(
-                    new Transporte(null, "Transporte Express", new HashSet<>(Arrays.asList(seco, refrigerado))),
-                    new Transporte(null, "Logística Segura", new HashSet<>(Arrays.asList(seco))),
-                    new Transporte(null, "Envíos Fríos", new HashSet<>(Arrays.asList(refrigerado, congelado))),
-                    new Transporte(null, "Cargas Rápidas", new HashSet<>(Arrays.asList(seco, refrigerado, congelado))),
-                    new Transporte(null, "Distribuciones Premium", new HashSet<>(Arrays.asList(refrigerado)))
+                    new Transporte(null, "Transportes Norte", new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.REFRIGERADO))),
+                    new Transporte(null, "Logística Express", new HashSet<>(Arrays.asList(TipoTransporte.REFRIGERADO, TipoTransporte.CONGELADO))),
+                    new Transporte(null, "Fletes del Sur", new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.CONGELADO)))
                 );
                 transporteRepository.saveAll(transportes);
             }
