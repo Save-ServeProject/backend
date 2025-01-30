@@ -1,8 +1,8 @@
 package com.example.saveandserve.demo.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,19 +19,18 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String nombre;
 
     @Column(nullable = false, unique = true)
     private String idProducto;
 
-    @Column(nullable = false)
-    private String precio; 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precio; 
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoTransporte tipoTransporte;
-
 
     public enum TipoProducto {
         SECO,
@@ -53,7 +52,4 @@ public class Producto {
         inverseJoinColumns = @JoinColumn(name = "alergeno_id")
     )
     private Set<Alergenos> alergenos;
-
-
-    
 }

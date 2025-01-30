@@ -1,18 +1,68 @@
 package com.example.saveandserve.demo.service;
 
 import com.example.saveandserve.demo.entity.Donacion;
+import com.example.saveandserve.demo.entity.LineaProducto;
+import com.example.saveandserve.demo.entity.Producto;
 import com.example.saveandserve.demo.repository.DonacionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.saveandserve.demo.repository.LineaProductoRepository;
+import com.example.saveandserve.demo.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DonacionService {
 
-    @Autowired
-    private DonacionRepository donacionRepository;
+    private final DonacionRepository donacionRepository;
+    private final ProductoRepository productoRepository;
+    private final LineaProductoRepository lineaProductoRepository;
+
+    public DonacionService(DonacionRepository donacionRepository, ProductoRepository productoRepository, LineaProductoRepository lineaProductoRepository) {
+        this.donacionRepository = donacionRepository;
+        this.productoRepository = productoRepository;
+        this.lineaProductoRepository = lineaProductoRepository;
+    }
+
+    @Transactional
+    public Donacion registrar(Donacion donacion) {
+        BigDecimal totalDonacion = BigDecimal.ZERO;
+    
+        for (LineaProducto lp : donacion.getLineasProducto()) {
+            Producto producto = lp.getProducto();
+    
+            // Verificar si el producto ya existe
+            Optional<Producto> productoExistente = productoRepository.findByIdProducto(producto.getIdProducto());
+    
+            if (productoExistente.isPresent()) {
+                lp.setProducto(productoExistente.get()); // Usar el existente
+            } else {
+                producto = productoRepository.save(producto); // Guardar el nuevo producto
+                lp.setProducto(producto);
+            }
+    
+            // Calcular el subtotal
+            lp.setSubtotal(lp.getPrecioUnitario().multiply(BigDecimal.valueOf(lp.getCantidad())));
+            totalDonacion = totalDonacion.add(lp.getSubtotal());
+    
+            // **Asignar la donación a la línea de producto**
+            lp.setDonacion(donacion);
+        }
+    
+        // Asignar el total de la donación
+        donacion.setTotalDonacion(totalDonacion);
+    
+        // **Guardar la donación primero**
+        Donacion nuevaDonacion = donacionRepository.save(donacion);
+    
+        // **Guardar las líneas de producto asociadas a la donación**
+        lineaProductoRepository.saveAll(donacion.getLineasProducto());
+    
+        return nuevaDonacion;
+    }
+    
 
     public List<Donacion> obtenerTodas() {
         return donacionRepository.findAll();
@@ -20,10 +70,6 @@ public class DonacionService {
 
     public Optional<Donacion> obtenerPorId(Long id) {
         return donacionRepository.findById(id);
-    }
-
-    public Donacion registrar(Donacion donacion) {
-        return donacionRepository.save(donacion);
     }
 
     public Optional<Donacion> actualizar(Long id, Donacion donacionActualizada) {

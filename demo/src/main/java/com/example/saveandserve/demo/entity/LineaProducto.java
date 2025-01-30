@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "linea_producto") 
 @Data
@@ -20,6 +22,7 @@ public class LineaProducto {
 
     @ManyToOne
     @JoinColumn(name = "donacion_id", nullable = false)
+    @JsonBackReference
     private Donacion donacion;
 
     @ManyToOne
