@@ -2,7 +2,7 @@ package com.example.saveandserve.demo.security.jwt.entidades;
 
 import java.util.Set;
 
-import com.example.daw.dto.GetUserDto;
+import com.example.saveandserve.demo.dto.GetUserDto;
 
 import lombok.Builder;
 import lombok.Getter;
