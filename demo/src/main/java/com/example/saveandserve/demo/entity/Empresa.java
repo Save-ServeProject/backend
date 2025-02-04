@@ -50,8 +50,7 @@ public class Empresa {
 
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+    // @JsonBackReference
+    @JsonIgnore
     private List<Donacion> donaciones;
 }
-
-//devuelvo una respuesta http con responseEntity
