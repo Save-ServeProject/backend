@@ -12,13 +12,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JwtUserResponse extends GetUserDto{
+public class JwtUserResponse extends GetUserDto {
 
-	private String token;
-	
-	@Builder(builderMethodName="jwtUserResponseBuilder")
-	public JwtUserResponse(String username, String avatar, Set<String> roles, String token) {
-		super(username, avatar, roles);
-		this.token = token;
-	}
+    private String token;
+    private String fullName;
+    private String email;
+
+    @Builder(builderMethodName = "jwtUserResponseBuilder")
+    public JwtUserResponse(String username, String fullName, String email, Set<String> roles, String token) {
+        super(username, roles);
+        this.fullName = fullName;
+        this.email = email;
+        this.token = token;
+    }
 }

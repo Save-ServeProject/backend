@@ -16,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,9 +28,31 @@ public class AutenticacionController {
     private final JwtProvider tokenProvider;
     private final UsuarioDtoConverter usuarioDtoConverter;
 
+    // @PostMapping("/auth/login")
+    // public ResponseEntity<JwtUserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    //     Authentication authentication = authenticationManager.authenticate(
+    //             new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+    //     );
+
+    //     SecurityContextHolder.getContext().setAuthentication(authentication);
+    //     Usuario usuario = (Usuario) authentication.getPrincipal();
+    //     String jwtToken = tokenProvider.generateToken(authentication);
+
+    //     Set<String> roles = usuario.getRoles().stream()
+    //             .map(Enum::name) // Convertir los roles de Enum a String
+    //             .collect(Collectors.toSet());
+
+    //     JwtUserResponse respuesta = JwtUserResponse.builder()
+    //             .username(usuario.getUsername()) 
+    //             .roles(roles)  
+    //             .token(jwtToken)
+    //             .build();
+
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+    // }
+
     @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        // Autenticación con email en lugar de nombre de usuario
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
@@ -39,24 +61,26 @@ public class AutenticacionController {
         Usuario usuario = (Usuario) authentication.getPrincipal();
         String jwtToken = tokenProvider.generateToken(authentication);
 
-        // Convertimos los roles de la entidad Usuario a un Set de Strings
         Set<String> roles = usuario.getRoles().stream()
-                .map(rol -> rol.name())  // Convertir cada rol a su nombre (e.g., "BANCO_DE_ALIMENTOS")
+                .map(Enum::name)
                 .collect(Collectors.toSet());
 
-        JwtUserResponse respuesta = JwtUserResponse.builder()
-                .username(usuario.getUsername())  // Nombre de usuario de la entidad Usuario
-                .roles(roles)  // Roles obtenidos de la entidad Usuario
+        JwtUserResponse respuesta = JwtUserResponse.jwtUserResponseBuilder()
+                .username(usuario.getUsername())
+                .fullName(usuario.getFullName())
+                .email(usuario.getEmail())
+                .roles(roles)
                 .token(jwtToken)
                 .build();
 
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
+
     @GetMapping("/usuarios/me")
-    public ResponseEntity<GetUsuarioDto> me(@AuthenticationPrincipal Usuario usuario) {
-        // Convertir la entidad Usuario a DTO usando el conversor
-        GetUsuarioDto respuesta = usuarioDtoConverter.convertUsuarioEntityToGetUsuarioDto(usuario);
+    public ResponseEntity<GetUserDto> me(@AuthenticationPrincipal Usuario usuario) {
+        GetUserDto respuesta = usuarioDtoConverter.convertUsuarioEntityToGetUsuarioDto(usuario);
         return ResponseEntity.ok(respuesta);
     }
 }

@@ -13,6 +13,5 @@ import lombok.Setter;
 public class GetUserDto {
 
 	private String username;
-	private String avatar;
 	private Set<String> roles;
 }
