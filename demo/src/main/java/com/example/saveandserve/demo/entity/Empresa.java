@@ -40,9 +40,9 @@ public class Empresa {
     private String ciudad;
 
     public static enum Suscripcion {
-        ADMIN,
-        USER,
-        GUEST
+        BASICA,
+        ESTANDAR, 
+        PREMIUM
     }
 
     @Enumerated(EnumType.STRING)
