@@ -81,17 +81,13 @@ public class SecurityConfig {
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-					.requestMatchers(HttpMethod.GET, "/producto/**", "/lote/**").hasRole("USER")
-					.requestMatchers(HttpMethod.POST, "/producto/**", "/lote/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT, "/producto/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE, "/producto/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/pedido/**").hasAnyRole("USER", "ADMIN")
+					.requestMatchers( "/**").permitAll()
 					.anyRequest().authenticated() // Cualquier otra ruta requerirá autenticación
 			)
 			// Añadimos un filtro encargado de coger el token y si es válido 
 			.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-			.csrf(csrf -> csrf.disable()
+			.csrf(csrf -> csrf.disable())
+			.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
 			);
 									
 		return http.build();
