@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.saveandserve.demo.entity.Empresa;
@@ -14,6 +15,8 @@ public class EmpresaService {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Empresa> obtenerTodas() {
         return empresaRepository.findAll();
@@ -53,4 +56,15 @@ public class EmpresaService {
         return empresaRepository.findAll().stream()
                 .anyMatch(emp -> emp.getEmail().equals(email) && emp.getContrasenia().equals(password));
     }
+
+    public Empresa saveEmpresa(Empresa empresa) {
+        empresa.setContrasenia(passwordEncoder.encode(empresa.getContrasenia())); // 🔒 Encripta la contraseña
+        return empresaRepository.save(empresa);
+    }
+    
+    public Empresa loadEmpresaById(Long id) {
+        return empresaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+    }
+
 }

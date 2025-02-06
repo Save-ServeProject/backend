@@ -3,6 +3,7 @@ package com.example.saveandserve.demo.service;
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class BancoDeAlimentosService {
 
     @Autowired
     private BancoDeAlimentosRepository bancoDeAlimentosRepository;
+
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
     public List<BancoDeAlimentos> obtenerTodos() {
         return bancoDeAlimentosRepository.findAll();
@@ -25,6 +29,8 @@ public class BancoDeAlimentosService {
     public BancoDeAlimentos registrar(BancoDeAlimentos banco) {
         return bancoDeAlimentosRepository.save(banco);
     }
+
+    
 
     public Optional<BancoDeAlimentos> actualizar(Long id, BancoDeAlimentos bancoActualizado) {
         return bancoDeAlimentosRepository.findById(id).map(bancoExistente -> {
@@ -41,4 +47,15 @@ public class BancoDeAlimentosService {
     public void eliminar(Long id) {
         bancoDeAlimentosRepository.deleteById(id);
     }
+
+    public BancoDeAlimentos saveBanco(BancoDeAlimentos banco) {
+        banco.setContrasenia(passwordEncoder.encode(banco.getContrasenia())); // 🔒 Encripta la contraseña
+        return bancoDeAlimentosRepository.save(banco);
+    }
+    
+    public BancoDeAlimentos loadBancoById(Long id) {
+        return bancoDeAlimentosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Banco de alimentos no encontrado"));
+    }
+    
 }

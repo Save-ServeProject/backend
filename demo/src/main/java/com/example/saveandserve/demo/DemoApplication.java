@@ -12,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.saveandserve.demo.entity.Alergenos;
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
@@ -21,11 +22,13 @@ import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.entity.TipoTransporte;
 import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
 import com.example.saveandserve.demo.entity.Transporte;
+import com.example.saveandserve.demo.entity.Usuario;
 import com.example.saveandserve.demo.repository.AlergenosRepository;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
 import com.example.saveandserve.demo.repository.TransporteRepository;
+import com.example.saveandserve.demo.repository.UsuarioRepository;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -36,11 +39,11 @@ public class DemoApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(EmpresaRepository empresaRepository, BancoDeAlimentosRepository bancoDeAlimentosRepository, DonacionRepository donacionRepository,
-     AlergenosRepository alergenosRepository, TransporteRepository transporteRepository) {
+     AlergenosRepository alergenosRepository, TransporteRepository transporteRepository, BCryptPasswordEncoder passwordEncoder,UsuarioRepository usuarioRepository) {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
-                    new Empresa(null, "Empresa 1", "empresa1@example.com", "Calle Ficticia 1, Ciudad 1", "123-456-7890", "CIF12345678", "contrasenia1", "Tipo1", "Ciudad 1", Suscripcion.ESTANDAR, null),
+                    new Empresa(null, "Empresa 1", "empresa1@example.com", "Calle Ficticia 1, Ciudad 1", "123-456-7890", "CIF12345678", passwordEncoder.encode("contrasenia1"), "Tipo1", "Ciudad 1", Suscripcion.ESTANDAR, null),
                     new Empresa(null, "Empresa 2", "empresa2@example.com", "Calle Ficticia 2, Ciudad 2", "123-456-7891", "CIF12345679", "contrasenia2", "Tipo2", "Ciudad 2", Suscripcion.BASICA, null),
                     new Empresa(null, "Empresa 3", "empresa3@example.com", "Calle Ficticia 3, Ciudad 3", "123-456-7892", "CIF12345680", "contrasenia3", "Tipo3", "Ciudad 3", Suscripcion.PREMIUM, null),
                     new Empresa(null, "Empresa 4", "empresa4@example.com", "Calle Ficticia 4, Ciudad 4", "123-456-7893", "CIF12345681", "contrasenia4", "Tipo4", "Ciudad 4", Suscripcion.BASICA, null),
@@ -53,7 +56,6 @@ public class DemoApplication {
                 );
                 empresaRepository.saveAll(empresas);
             }
-
           if (bancoDeAlimentosRepository.count() == 0) {
     List<BancoDeAlimentos> bancos = Arrays.asList(
         new BancoDeAlimentos(null, "Banco de Alimentos de Alicante", "Calle Agost, 7", "965117190", "alicante@bancodealimentos.es", "Alicante", "password1", null),
