@@ -51,7 +51,7 @@ public class UsuarioService implements UserDetailsService {
             return User.builder()
                     .username(banco.get().getEmail())
                     .password(banco.get().getContrasenia()) // Contraseña encriptada
-                    .roles("BANCO")
+                    .roles("BANCO_DE_ALIMENTOS")
                     .build();
         }
 

@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,31 +64,58 @@ public class AutenticacionController {
                 Empresa empresa = empresaRepository.findByEmail(principal.getUsername()).orElseThrow();
                 String token = tokenProvider.generateToken(principal.getUsername(), tipoUsuario);
                 return ResponseEntity.status(HttpStatus.CREATED)
-				.body(convertUserEntityAndTokenToJwtUserResponse(empresa, token));
+				.body(convertUserEntityAndTokenToJwtEmpresaResponse(empresa, token));
 
             }
             case 'U' -> {
-                Usuario usuario = (Usuario) principal;
+                Usuario usuario = usuarioRepository.findByEmail(principal.getUsername()).orElseThrow();
+                String token = tokenProvider.generateToken(principal.getUsername(), tipoUsuario);
+                return ResponseEntity.status(HttpStatus.CREATED)
+				.body(convertUserEntityAndTokenToJwtUserResponse(usuario, token));
             }
             case 'D' -> {
-                BancoDeAlimentos banco = (BancoDeAlimentos) principal;
+                BancoDeAlimentos bancoDeAlimentos = bancoDeAlimentosRepository.findByEmail(principal.getUsername()).orElseThrow();
+                String token = tokenProvider.generateToken(principal.getUsername(), tipoUsuario);
+                return ResponseEntity.status(HttpStatus.CREATED)
+				.body(convertUserEntityAndTokenToJwtBancoDeAlimentosResponse(bancoDeAlimentos, token));
             }
             default -> throw new IllegalStateException("Tipo de usuario desconocido: " + tipoUsuario);
-        }
-        
-        
-        return null;
+        }        
     }
 
-    private JwtUserResponse convertUserEntityAndTokenToJwtUserResponse(Empresa empresa, String jwtToken) {
+    private JwtUserResponse convertUserEntityAndTokenToJwtUserResponse(Usuario usuario, String jwtToken) {
+
+        Set<String> roles = new HashSet<>();
+        roles.add("ADMIN");
+        
 		return JwtUserResponse.jwtUserResponseBuilder()
-						.username(empresa.getUsername())
-                        .email(empresa.getEmail())
-						.roles(null)
+						.username(usuario.getUsername())
+                        .email(usuario.getEmail())
+						.roles(roles)
 						.token(jwtToken)
 						.build();
 	}
 
+    private JwtUserResponse convertUserEntityAndTokenToJwtEmpresaResponse(Empresa empresa, String jwtToken) {
+        Set<String> roles = new HashSet<>();
+        roles.add("EMPRESA");
+		return JwtUserResponse.jwtUserResponseBuilder()
+						.username(empresa.getUsername())
+                        .email(empresa.getEmail())
+						.roles(roles)
+						.token(jwtToken)
+						.build();
+	}
+    private JwtUserResponse convertUserEntityAndTokenToJwtBancoDeAlimentosResponse(BancoDeAlimentos bancoDeAlimentos, String jwtToken) {
+        Set<String> roles = new HashSet<>();
+        roles.add("BANCO_DE_ALIMENTOS");
+		return JwtUserResponse.jwtUserResponseBuilder()
+						.username(bancoDeAlimentos.getUsername())
+                        .email(bancoDeAlimentos.getEmail())
+						.roles(roles)
+						.token(jwtToken)
+						.build();
+	}
     // private ResponseEntity<JwtUserResponse> autenticarUsuario(Object entidad, String rol) {
     //     String email;
     //     String password;
@@ -132,7 +160,7 @@ public class AutenticacionController {
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_EMPRESA"))) {
             return 'E'; // Empresa
         } else if (authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO"))) {
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             return 'U'; // Usuario
         } else if (authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_BANCO_DE_ALIMENTOS"))) {

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
 import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.entity.Usuario;
+import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.EmpresaRepository;
+import com.example.saveandserve.demo.repository.UsuarioRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,26 +37,74 @@ public class JwtProvider {
 
 	@Autowired
 	EmpresaRepository empresaRepository;
+
+	@Autowired
+	UsuarioRepository usuarioRepository;
 	
+	@Autowired	
+	BancoDeAlimentosRepository bancoDeAlimentosRepository;
+
 	public String generateToken(String email, char tipoUsuario) {
-		
-		Empresa empresa = empresaRepository.findByEmail(email).orElseThrow();
+
+		if (tipoUsuario == 'U') {
+			Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
+			Date tokenExpirationDate = new Date(System.currentTimeMillis() + jwtDurationTokenEnSegundos * 1000);
+			return Jwts.builder()
+					.header().add("typ", TOKEN_TYPE).and()
+					.subject(Long.toString(usuario.getId()))
+					.issuedAt(new Date())
+					.expiration(tokenExpirationDate)
+					.claim("email", email)
+					.claim("fullname", usuario.getUsername())
+					// Esto develve los roles en String. Ejemplo [ADMIN, USER] --> "ADMIN, USER"
+					.claim("roles", "ADMIN"
+						)
+					//Crea la clave secreta utilizando el algoritmo HMAC-SHA que se utilizará para firmar el token JWT
+					.signWith(Keys.hmacShaKeyFor(jwtSecreto.getBytes())) 
+					.compact();
+
+		} else if (tipoUsuario == 'E') {
+
+			Empresa empresa = empresaRepository.findByEmail(email).orElseThrow();
+			Date tokenExpirationDate = new Date(System.currentTimeMillis() + jwtDurationTokenEnSegundos * 1000);
+			return Jwts.builder()
+					.header().add("typ", TOKEN_TYPE).and()
+					.subject(Long.toString(empresa.getId()))
+					.issuedAt(new Date())
+					.expiration(tokenExpirationDate)
+					.claim("email", email)
+					.claim("fullname", empresa.getUsername())
+					// Esto develve los roles en String. Ejemplo [ADMIN, USER] --> "ADMIN, USER"
+					.claim("roles", "EMPRESA"
+						)
+					//Crea la clave secreta utilizando el algoritmo HMAC-SHA que se utilizará para firmar el token JWT
+					.signWith(Keys.hmacShaKeyFor(jwtSecreto.getBytes())) 
+					.compact();
+
+
+		} else if (tipoUsuario == 'D') {
+
+			BancoDeAlimentos bancoDeAlimentos = bancoDeAlimentosRepository.findByEmail(email).orElseThrow();
+			Date tokenExpirationDate = new Date(System.currentTimeMillis() + jwtDurationTokenEnSegundos * 1000);
+			return Jwts.builder()
+					.header().add("typ", TOKEN_TYPE).and()
+					.subject(Long.toString(bancoDeAlimentos.getId()))
+					.issuedAt(new Date())
+					.expiration(tokenExpirationDate)
+					.claim("email", email)
+					.claim("fullname", bancoDeAlimentos.getUsername())
+					// Esto develve los roles en String. Ejemplo [ADMIN, USER] --> "ADMIN, USER"
+					.claim("roles", "BANCO_DE_ALIMENTOS"
+						)
+					//Crea la clave secreta utilizando el algoritmo HMAC-SHA que se utilizará para firmar el token JWT
+					.signWith(Keys.hmacShaKeyFor(jwtSecreto.getBytes())) 
+					.compact();
+		} else {
+			throw new IllegalArgumentException("El tipo de banco de alimentos no es válido.");
+			
+		}
 
 		
-		Date tokenExpirationDate = new Date(System.currentTimeMillis() + jwtDurationTokenEnSegundos * 1000);
-		return Jwts.builder()
-				.header().add("typ", TOKEN_TYPE).and()
-				.subject(Long.toString(empresa.getId()))
-				.issuedAt(new Date())
-				.expiration(tokenExpirationDate)
-				.claim("email", email)
-				.claim("fullname", empresa.getNombre())
-				// Esto develve los roles en String. Ejemplo [ADMIN, USER] --> "ADMIN, USER"
-				.claim("roles", "EMPRESA"
-					)
-				//Crea la clave secreta utilizando el algoritmo HMAC-SHA que se utilizará para firmar el token JWT
-				.signWith(Keys.hmacShaKeyFor(jwtSecreto.getBytes())) 
-				.compact();
 	}
 	
 	public Long getUserIdFromJWT(String token) {

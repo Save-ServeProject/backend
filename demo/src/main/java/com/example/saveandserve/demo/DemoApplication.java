@@ -23,6 +23,7 @@ import com.example.saveandserve.demo.entity.TipoTransporte;
 import com.example.saveandserve.demo.entity.Empresa.Suscripcion;
 import com.example.saveandserve.demo.entity.Transporte;
 import com.example.saveandserve.demo.entity.Usuario;
+import com.example.saveandserve.demo.entity.UsuarioRol;
 import com.example.saveandserve.demo.repository.AlergenosRepository;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import com.example.saveandserve.demo.repository.DonacionRepository;
@@ -43,34 +44,47 @@ public class DemoApplication {
         return (args) -> {
             if (empresaRepository.count() == 0) {
                 List<Empresa> empresas = Arrays.asList(
-                    new Empresa(null, "Empresa 1", "empresa1@example.com", "Calle Ficticia 1, Ciudad 1", "123-456-7890", "CIF12345678", passwordEncoder.encode("contrasenia1"), "Tipo1", "Ciudad 1", Suscripcion.ESTANDAR, null),
-                    new Empresa(null, "Empresa 2", "empresa2@example.com", "Calle Ficticia 2, Ciudad 2", "123-456-7891", "CIF12345679", "contrasenia2", "Tipo2", "Ciudad 2", Suscripcion.BASICA, null),
-                    new Empresa(null, "Empresa 3", "empresa3@example.com", "Calle Ficticia 3, Ciudad 3", "123-456-7892", "CIF12345680", "contrasenia3", "Tipo3", "Ciudad 3", Suscripcion.PREMIUM, null),
-                    new Empresa(null, "Empresa 4", "empresa4@example.com", "Calle Ficticia 4, Ciudad 4", "123-456-7893", "CIF12345681", "contrasenia4", "Tipo4", "Ciudad 4", Suscripcion.BASICA, null),
-                    new Empresa(null, "Empresa 5", "empresa5@example.com", "Calle Ficticia 5, Ciudad 5", "123-456-7894", "CIF12345682", "contrasenia5", "Tipo5", "Ciudad 5", Suscripcion.BASICA, null),
-                    new Empresa(null, "Empresa 6", "empresa6@example.com", "Calle Ficticia 6, Ciudad 6", "123-456-7895", "CIF12345683", "contrasenia6", "Tipo6", "Ciudad 6", Suscripcion.BASICA, null),
-                    new Empresa(null, "Empresa 7", "empresa7@example.com", "Calle Ficticia 7, Ciudad 7", "123-456-7896", "CIF12345684", "contrasenia7", "Tipo7", "Ciudad 7", Suscripcion.PREMIUM, null),
-                    new Empresa(null, "Empresa 8", "empresa8@example.com", "Calle Ficticia 8, Ciudad 8", "123-456-7897", "CIF12345685", "contrasenia8", "Tipo8", "Ciudad 8", Suscripcion.PREMIUM, null),
-                    new Empresa(null, "Empresa 9", "empresa9@example.com", "Calle Ficticia 9, Ciudad 9", "123-456-7898", "CIF12345686", "contrasenia9", "Tipo9", "Ciudad 9", Suscripcion.PREMIUM, null),
-                    new Empresa(null, "Empresa 10", "empresa10@example.com", "Calle Ficticia 10, Ciudad 10", "123-456-7899", "CIF12345687", "contrasenia10", "Tipo10", "Ciudad 10", Suscripcion.PREMIUM, null)
+                    new Empresa(null, "Empresa 1", "empresa1@example.com", "Calle Ficticia 1, Ciudad 1", "123-456-7890", "CIF12345678", passwordEncoder.encode("1234"), "Tipo1", "Ciudad 1", Suscripcion.ESTANDAR, null),
+                    new Empresa(null, "Empresa 2", "empresa2@example.com", "Calle Ficticia 2, Ciudad 2", "123-456-7891", "CIF12345679", passwordEncoder.encode("1234"), "Tipo2", "Ciudad 2", Suscripcion.BASICA, null),
+                    new Empresa(null, "Empresa 3", "empresa3@example.com", "Calle Ficticia 3, Ciudad 3", "123-456-7892", "CIF12345680", passwordEncoder.encode("1234"), "Tipo3", "Ciudad 3", Suscripcion.PREMIUM, null),
+                    new Empresa(null, "Empresa 4", "empresa4@example.com", "Calle Ficticia 4, Ciudad 4", "123-456-7893", "CIF12345681", passwordEncoder.encode("1234"), "Tipo4", "Ciudad 4", Suscripcion.BASICA, null),
+                    new Empresa(null, "Empresa 5", "empresa5@example.com", "Calle Ficticia 5, Ciudad 5", "123-456-7894", "CIF12345682", passwordEncoder.encode("1234"), "Tipo5", "Ciudad 5", Suscripcion.BASICA, null),
+                    new Empresa(null, "Empresa 6", "empresa6@example.com", "Calle Ficticia 6, Ciudad 6", "123-456-7895", "CIF12345683", passwordEncoder.encode("1234"), "Tipo6", "Ciudad 6", Suscripcion.BASICA, null),
+                    new Empresa(null, "Empresa 7", "empresa7@example.com", "Calle Ficticia 7, Ciudad 7", "123-456-7896", "CIF12345684", passwordEncoder.encode("1234"), "Tipo7", "Ciudad 7", Suscripcion.PREMIUM, null),
+                    new Empresa(null, "Empresa 8", "empresa8@example.com", "Calle Ficticia 8, Ciudad 8", "123-456-7897", "CIF12345685", passwordEncoder.encode("1234"), "Tipo8", "Ciudad 8", Suscripcion.PREMIUM, null),
+                    new Empresa(null, "Empresa 9", "empresa9@example.com", "Calle Ficticia 9, Ciudad 9", "123-456-7898", "CIF12345686", passwordEncoder.encode("1234"), "Tipo9", "Ciudad 9", Suscripcion.PREMIUM, null),
+                    new Empresa(null, "Empresa 10", "empresa10@example.com", "Calle Ficticia 10, Ciudad 10", "123-456-7899", "CIF12345687", passwordEncoder.encode("1234"), "Tipo10", "Ciudad 10", Suscripcion.PREMIUM, null)
                 );
                 empresaRepository.saveAll(empresas);
             }
           if (bancoDeAlimentosRepository.count() == 0) {
-    List<BancoDeAlimentos> bancos = Arrays.asList(
-        new BancoDeAlimentos(null, "Banco de Alimentos de Alicante", "Calle Agost, 7", "965117190", "alicante@bancodealimentos.es", "Alicante", "password1", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Madrid", "Carretera de Colmenar Km 13,600", "917346383", "madrid@bancodealimentos.es", "Madrid", "password2", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Barcelona", "Carrer Motors, 122", "933464404", "barcelona@bancodealimentos.es", "Barcelona", "password3", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Valencia", "Carrer dels Pedrapiquers, 5", "963924460", "valencia@bancodealimentos.es", "Valencia", "password4", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Sevilla", "Carretera Sevilla-Málaga Km 5", "954219311", "sevilla@bancodealimentos.es", "Sevilla", "password5", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Málaga", "Avenida Juan XXIII, 49", "952131894", "malaga@bancodealimentos.es", "Málaga", "password6", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Bilbao", "Calle Ribera de Zorrozaurre, 48", "944499158", "bilbao@bancodealimentos.es", "Bilbao", "password7", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Zaragoza", "Calle Mercazaragoza, 1", "976737136", "zaragoza@bancodealimentos.es", "Zaragoza", "password8", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Murcia", "Calle Alcalde Clemente García, 14", "968879940", "murcia@bancodealimentos.es", "Murcia", "password9", null),
-        new BancoDeAlimentos(null, "Banco de Alimentos de Granada", "Calle Loja, Nave 7", "958303578", "granada@bancodealimentos.es", "Granada", "password10", null)
-    );
-    bancoDeAlimentosRepository.saveAll(bancos);
-}
+                List<BancoDeAlimentos> bancos = Arrays.asList(
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Alicante", "Calle Agost, 7", "965117190", "alicante@bancodealimentos.es", "Alicante", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Madrid", "Carretera de Colmenar Km 13,600", "917346383", "madrid@bancodealimentos.es", "Madrid", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Barcelona", "Carrer Motors, 122", "933464404", "barcelona@bancodealimentos.es", "Barcelona",passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Valencia", "Carrer dels Pedrapiquers, 5", "963924460", "valencia@bancodealimentos.es", "Valencia", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Sevilla", "Carretera Sevilla-Málaga Km 5", "954219311", "sevilla@bancodealimentos.es", "Sevilla", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Málaga", "Avenida Juan XXIII, 49", "952131894", "malaga@bancodealimentos.es", "Málaga", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Bilbao", "Calle Ribera de Zorrozaurre, 48", "944499158", "bilbao@bancodealimentos.es", "Bilbao", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Zaragoza", "Calle Mercazaragoza, 1", "976737136", "zaragoza@bancodealimentos.es", "Zaragoza", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Murcia", "Calle Alcalde Clemente García, 14", "968879940", "murcia@bancodealimentos.es", "Murcia", passwordEncoder.encode("1234"), null),
+                    new BancoDeAlimentos(null, "Banco de Alimentos de Granada", "Calle Loja, Nave 7", "958303578", "granada@bancodealimentos.es", "Granada", passwordEncoder.encode("1234"), null)
+                );
+                bancoDeAlimentosRepository.saveAll(bancos);
+            }
+
+             if (usuarioRepository.count() == 0) {
+            List<Usuario> usuarios = Arrays.asList(
+                new Usuario(null, "admin1", passwordEncoder.encode("1234"), "admin1@example.com", UsuarioRol.ADMINISTRADOR, null, null),
+                new Usuario(null, "admin2", passwordEncoder.encode("1234"), "admin2@example.com", UsuarioRol.ADMINISTRADOR, null, null),
+                new Usuario(null, "admin3", passwordEncoder.encode("1234"), "admin3@example.com", UsuarioRol.ADMINISTRADOR, null, null),
+                new Usuario(null, "admin4", passwordEncoder.encode("1234"), "admin4@example.com", UsuarioRol.ADMINISTRADOR, null, null)
+            );
+            usuarioRepository.saveAll(usuarios);
+        }
+
+
+
 
 
             //ejemplo de donacion
