@@ -47,9 +47,4 @@ public class EmpresaController {
         return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> loginEmpresa(@RequestParam String email, @RequestParam String password) {
-        boolean autenticado = empresaService.autenticar(email, password);
-        return autenticado ? ResponseEntity.ok("Login exitoso") : ResponseEntity.status(401).body("Credenciales incorrectas");
-    }
 }
