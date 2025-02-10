@@ -50,7 +50,7 @@ public class Donacion {
     
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
-    @JsonManagedReference  
+    // @JsonManagedReference 
     private Empresa empresa;
 
     @OneToMany(mappedBy = "donacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
