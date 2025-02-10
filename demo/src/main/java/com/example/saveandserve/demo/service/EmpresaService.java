@@ -27,6 +27,7 @@ public class EmpresaService {
     }
 
     public Empresa guardar(Empresa empresa) {
+        empresa.setContrasenia(passwordEncoder.encode(empresa.getContrasenia())); // 🔒 Cifrar antes de guardar
         return empresaRepository.save(empresa);
     }
 
@@ -37,9 +38,13 @@ public class EmpresaService {
             empresaExistente.setDireccion(empresaActualizada.getDireccion());
             empresaExistente.setTelefono(empresaActualizada.getTelefono());
             empresaExistente.setCif(empresaActualizada.getCif());
-            empresaExistente.setContrasenia(empresaActualizada.getContrasenia());
             empresaExistente.setCiudad(empresaActualizada.getCiudad());
             empresaExistente.setSuscripcion(empresaActualizada.getSuscripcion());
+
+            if (!passwordEncoder.matches(empresaActualizada.getContrasenia(), empresaExistente.getContrasenia())) {
+                empresaExistente.setContrasenia(passwordEncoder.encode(empresaActualizada.getContrasenia()));
+            }
+
             return empresaRepository.save(empresaExistente);
         });
     }

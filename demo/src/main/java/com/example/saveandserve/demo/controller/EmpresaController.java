@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +30,29 @@ public class EmpresaController {
         return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // @PostMapping
+    // public ResponseEntity<Empresa> registrarEmpresa(@RequestBody Empresa empresa) {
+    //     Empresa nuevaEmpresa = empresaService.guardar(empresa);
+    //     return ResponseEntity.ok(nuevaEmpresa);
+    // }
+
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaActualizada) {
+    //     Optional<Empresa> empresa = empresaService.actualizar(id, empresaActualizada);
+    //     return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    // }
+
     @PostMapping
-    public ResponseEntity<Empresa> registrarEmpresa(@RequestBody Empresa empresa) {
+    public ResponseEntity<Empresa> registrar(@RequestBody Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.guardar(empresa);
-        return ResponseEntity.ok(nuevaEmpresa);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaEmpresa);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaActualizada) {
-        Optional<Empresa> empresa = empresaService.actualizar(id, empresaActualizada);
-        return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Empresa> actualizar(@PathVariable Long id, @RequestBody Empresa empresa) {
+        Optional<Empresa> empresaActualizada = empresaService.actualizar(id, empresa);
+        return empresaActualizada.map(ResponseEntity::ok)
+                                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
