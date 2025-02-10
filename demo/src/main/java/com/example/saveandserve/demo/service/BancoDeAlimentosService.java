@@ -27,10 +27,8 @@ public class BancoDeAlimentosService {
     }
 
     public BancoDeAlimentos registrar(BancoDeAlimentos banco) {
-        return bancoDeAlimentosRepository.save(banco);
+        return saveBanco(banco);
     }
-
-    
 
     public Optional<BancoDeAlimentos> actualizar(Long id, BancoDeAlimentos bancoActualizado) {
         return bancoDeAlimentosRepository.findById(id).map(bancoExistente -> {
@@ -39,7 +37,11 @@ public class BancoDeAlimentosService {
             bancoExistente.setTelefono(bancoActualizado.getTelefono());
             bancoExistente.setEmail(bancoActualizado.getEmail());
             bancoExistente.setCiudad(bancoActualizado.getCiudad());
-            bancoExistente.setContrasenia(bancoActualizado.getContrasenia());
+
+            if (bancoActualizado.getContrasenia() != null && !bancoActualizado.getContrasenia().isEmpty()) {
+                bancoExistente.setContrasenia(passwordEncoder.encode(bancoActualizado.getContrasenia()));
+            }
+
             return bancoDeAlimentosRepository.save(bancoExistente);
         });
     }
