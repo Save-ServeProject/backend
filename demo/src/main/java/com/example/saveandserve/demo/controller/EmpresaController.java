@@ -15,7 +15,7 @@ import com.example.saveandserve.demo.service.EmpresaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.web.PageableDefault;
 
 @RestController
 @RequestMapping("/empresas")
@@ -55,13 +55,10 @@ public class EmpresaController {
         return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    @GetMapping
+    @GetMapping("/paginadas")
     public ResponseEntity<Page<Empresa>> obtenerEmpresasPaginadas(
-            @RequestParam(defaultValue = "0") int page,    
-            @RequestParam(defaultValue = "10") int size,   
-            @RequestParam(defaultValue = "nombre") String sortBy 
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+          @PageableDefault(page = 0, size = 9) Pageable pageable)
+    {
         Page<Empresa> empresas = empresaService.obtenerEmpresasPaginadas(pageable);
         return ResponseEntity.ok(empresas);
     }

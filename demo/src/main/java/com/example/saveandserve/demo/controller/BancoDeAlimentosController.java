@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,13 +51,10 @@ public class BancoDeAlimentosController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/paginadas")
     public ResponseEntity<Page<BancoDeAlimentos>> obtenerBancosPaginados(
-            @RequestParam(defaultValue = "0") int page,    // Página actual
-            @RequestParam(defaultValue = "10") int size,   // Tamaño de la página
-            @RequestParam(defaultValue = "nombre") String sortBy // Campo para ordenar
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+          @PageableDefault(page = 0, size = 9) Pageable pageable) {  
+    
         Page<BancoDeAlimentos> bancos = bancoDeAlimentosService.obtenerBancosPaginados(pageable);
         return ResponseEntity.ok(bancos);
     }
