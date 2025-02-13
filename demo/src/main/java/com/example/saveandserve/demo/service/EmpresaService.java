@@ -1,4 +1,6 @@
 package com.example.saveandserve.demo.service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +72,10 @@ public class EmpresaService {
     public Empresa loadEmpresaById(Long id) {
         return empresaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+    }
+
+    public Page<Empresa> obtenerEmpresasPaginadas(Pageable pageable) {
+        return empresaRepository.findAll(pageable);
     }
 
 }

@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.saveandserve.demo.entity.Empresa;
 import com.example.saveandserve.demo.service.EmpresaService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/empresas")
@@ -30,18 +36,6 @@ public class EmpresaController {
         return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // @PostMapping
-    // public ResponseEntity<Empresa> registrarEmpresa(@RequestBody Empresa empresa) {
-    //     Empresa nuevaEmpresa = empresaService.guardar(empresa);
-    //     return ResponseEntity.ok(nuevaEmpresa);
-    // }
-
-    // @PutMapping("/{id}")
-    // public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaActualizada) {
-    //     Optional<Empresa> empresa = empresaService.actualizar(id, empresaActualizada);
-    //     return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    // }
-
     @PostMapping
     public ResponseEntity<Empresa> registrar(@RequestBody Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.guardar(empresa);
@@ -59,6 +53,17 @@ public class EmpresaController {
     public ResponseEntity<Void> eliminarEmpresa(@PathVariable Long id) {
         boolean eliminado = empresaService.eliminar(id);
         return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<Empresa>> obtenerEmpresasPaginadas(
+            @RequestParam(defaultValue = "0") int page,    
+            @RequestParam(defaultValue = "10") int size,   
+            @RequestParam(defaultValue = "nombre") String sortBy 
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Empresa> empresas = empresaService.obtenerEmpresasPaginadas(pageable);
+        return ResponseEntity.ok(empresas);
     }
 
 }
