@@ -1,6 +1,8 @@
 package com.example.saveandserve.demo.service;
 
 import com.example.saveandserve.demo.entity.BancoDeAlimentos;
+import com.example.saveandserve.demo.error.RecursoNoEncontradoException;
+import com.example.saveandserve.demo.error.SolicitudIncorrectaException;
 import com.example.saveandserve.demo.repository.BancoDeAlimentosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,14 +23,23 @@ public class BancoDeAlimentosService {
     private  PasswordEncoder passwordEncoder;
 
     public List<BancoDeAlimentos> obtenerTodos() {
+        if (bancoDeAlimentosRepository.findAll().isEmpty()) {
+            throw new RecursoNoEncontradoException("No hay bancos de alimentos registrados.");
+        }
         return bancoDeAlimentosRepository.findAll();
     }
 
     public Optional<BancoDeAlimentos> obtenerPorId(Long id) {
+        if (bancoDeAlimentosRepository.findById(id) == null) {
+            throw new RecursoNoEncontradoException("Banco de alimentos no encontrado");
+        }
         return bancoDeAlimentosRepository.findById(id);
     }
 
     public BancoDeAlimentos registrar(BancoDeAlimentos banco) {
+        if (bancoDeAlimentosRepository.findByEmail(banco.getEmail()).isPresent()) {
+            throw new SolicitudIncorrectaException("El email ya está registrado. Intente con otro.");
+        }       
         return saveBanco(banco);
     }
 
@@ -65,5 +76,9 @@ public class BancoDeAlimentosService {
     public Page<BancoDeAlimentos> obtenerBancosPaginados(Pageable pageable) {
         return bancoDeAlimentosRepository.findAll(pageable);
     }
+
+    // public Page<BancoDeAlimentos> obtenerBancosPaginados(Pageable pageable) {
+    //     return bancoDeAlimentosRepository.findAll(pageable);
+    // }
     
 }
