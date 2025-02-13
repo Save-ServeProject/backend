@@ -73,4 +73,8 @@ public class EmpresaService {
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
     }
 
+    public Optional<Empresa> obtenerPorEmail(String email) {
+        return empresaRepository.findByEmail(email);
+    }
+
 }

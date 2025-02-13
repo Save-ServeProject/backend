@@ -1,17 +1,19 @@
 package com.example.saveandserve.demo.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.example.saveandserve.demo.entity.Donacion;
 import com.example.saveandserve.demo.entity.LineaProducto;
 import com.example.saveandserve.demo.entity.Producto;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.LineaProductoRepository;
 import com.example.saveandserve.demo.repository.ProductoRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
 
 @Service
 public class DonacionService {
@@ -86,5 +88,8 @@ public class DonacionService {
 
     public void eliminar(Long id) {
         donacionRepository.deleteById(id);
+    }
+    public List<Donacion> obtenerPorEmpresaId(Long empresaId) {
+        return donacionRepository.findByEmpresaId(empresaId);
     }
 }
