@@ -1,5 +1,16 @@
 package com.example.saveandserve.demo.controller;
 
+import com.example.saveandserve.demo.entity.BancoDeAlimentos;
+import com.example.saveandserve.demo.service.BancoDeAlimentosService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +64,13 @@ public class BancoDeAlimentosController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         bancoDeAlimentosService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/paginadas")
+    public ResponseEntity<Page<BancoDeAlimentos>> obtenerBancosPaginados(
+          @PageableDefault(page = 0, size = 9) Pageable pageable) {  
+    
+        Page<BancoDeAlimentos> bancos = bancoDeAlimentosService.obtenerBancosPaginados(pageable);
+        return ResponseEntity.ok(bancos);
     }
 }

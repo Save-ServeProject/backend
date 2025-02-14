@@ -1,4 +1,6 @@
 package com.example.saveandserve.demo.service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +77,10 @@ public class EmpresaService {
 
     public Optional<Empresa> obtenerPorEmail(String email) {
         return empresaRepository.findByEmail(email);
+    }
+
+    public Page<Empresa> obtenerEmpresasPaginadas(Pageable pageable) {
+        return empresaRepository.findAll(pageable);
     }
 
 }
