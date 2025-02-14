@@ -6,7 +6,22 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +48,7 @@ public class Producto {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoTransporte tipoTransporte;
+    private TipoTransporte tipoTransporte = TipoTransporte.SECO; //Valor por defecto
 
     public enum TipoProducto {
         SECO,
@@ -56,4 +71,28 @@ public class Producto {
         inverseJoinColumns = @JoinColumn(name = "alergeno_id")
     )
     private Set<Alergenos> alergenos;
+
+//Cosas pa probar
+// Método para sincronizar tipoTransporte con tipoProducto
+    @PrePersist
+    @PreUpdate
+    public void sincronizarTipoTransporte() {
+        if (this.tipoProducto != null) {
+            this.tipoTransporte = TipoTransporte.valueOf(this.tipoProducto.name());
+        }
+    }
+
+    // Método helper para establecer el tipo de producto y transporte juntos
+    public void setTipoProducto(TipoProducto tipoProducto) {
+        this.tipoProducto = tipoProducto;
+        if (tipoProducto != null) {
+            this.tipoTransporte = TipoTransporte.valueOf(tipoProducto.name());
+        }
+    }
+
+    // Override del setter de tipoTransporte para evitar valores nulos
+    public void setTipoTransporte(TipoTransporte tipoTransporte) {
+        this.tipoTransporte = tipoTransporte != null ? tipoTransporte : TipoTransporte.SECO;
+    }
+
 }

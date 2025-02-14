@@ -31,6 +31,24 @@ public class EmpresaService {
         return empresaRepository.save(empresa);
     }
 
+    // public Optional<Empresa> actualizar(Long id, Empresa empresaActualizada) {
+    //     return empresaRepository.findById(id).map(empresaExistente -> {
+    //         empresaExistente.setNombre(empresaActualizada.getNombre());
+    //         empresaExistente.setEmail(empresaActualizada.getEmail());
+    //         empresaExistente.setDireccion(empresaActualizada.getDireccion());
+    //         empresaExistente.setTelefono(empresaActualizada.getTelefono());
+    //         empresaExistente.setCif(empresaActualizada.getCif());
+    //         empresaExistente.setCiudad(empresaActualizada.getCiudad());
+    //         empresaExistente.setSuscripcion(empresaActualizada.getSuscripcion());
+
+    //         if (!passwordEncoder.matches(empresaActualizada.getContrasenia(), empresaExistente.getContrasenia())) {
+    //             empresaExistente.setContrasenia(passwordEncoder.encode(empresaActualizada.getContrasenia()));
+    //         }
+
+    //         return empresaRepository.save(empresaExistente);
+    //     });
+    // }
+
     public Optional<Empresa> actualizar(Long id, Empresa empresaActualizada) {
         return empresaRepository.findById(id).map(empresaExistente -> {
             empresaExistente.setNombre(empresaActualizada.getNombre());
@@ -40,11 +58,13 @@ public class EmpresaService {
             empresaExistente.setCif(empresaActualizada.getCif());
             empresaExistente.setCiudad(empresaActualizada.getCiudad());
             empresaExistente.setSuscripcion(empresaActualizada.getSuscripcion());
-
-            if (!passwordEncoder.matches(empresaActualizada.getContrasenia(), empresaExistente.getContrasenia())) {
+    
+            // Solo actualizar la contraseña si se proporciona una nueva
+            if (empresaActualizada.getContrasenia() != null && !empresaActualizada.getContrasenia().isEmpty()) {
                 empresaExistente.setContrasenia(passwordEncoder.encode(empresaActualizada.getContrasenia()));
             }
-
+            // Si no se proporciona contraseña, mantener la existente
+    
             return empresaRepository.save(empresaExistente);
         });
     }
@@ -70,6 +90,10 @@ public class EmpresaService {
     public Empresa loadEmpresaById(Long id) {
         return empresaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+    }
+
+    public Optional<Empresa> obtenerPorEmail(String email) {
+        return empresaRepository.findByEmail(email);
     }
 
 }
