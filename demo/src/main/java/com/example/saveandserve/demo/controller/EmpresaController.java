@@ -56,6 +56,7 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaEmpresa);
     }
 
+    
     @PutMapping("/{id}")
     public ResponseEntity<Empresa> actualizar(@PathVariable Long id, @RequestBody Empresa empresa) {
         Optional<Empresa> empresaActualizada = empresaService.actualizar(id, empresa);

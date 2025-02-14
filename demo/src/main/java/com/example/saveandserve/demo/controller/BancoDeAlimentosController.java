@@ -41,6 +41,7 @@ public class BancoDeAlimentosController {
         BancoDeAlimentos nuevoBanco = bancoDeAlimentosService.registrar(banco);
         return ResponseEntity.ok(nuevoBanco);
     }
+    
 
     @PutMapping("/{id}")
     public ResponseEntity<BancoDeAlimentos> actualizar(@PathVariable Long id, @RequestBody BancoDeAlimentos bancoActualizado) {
