@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,24 +40,13 @@ public class EmpresaController {
         return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // @PostMapping
-    // public ResponseEntity<Empresa> registrarEmpresa(@RequestBody Empresa empresa) {
-    //     Empresa nuevaEmpresa = empresaService.guardar(empresa);
-    //     return ResponseEntity.ok(nuevaEmpresa);
-    // }
-
-    // @PutMapping("/{id}")
-    // public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaActualizada) {
-    //     Optional<Empresa> empresa = empresaService.actualizar(id, empresaActualizada);
-    //     return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    // }
-
-    @PostMapping
+    @PostMapping("/registro")
     public ResponseEntity<Empresa> registrar(@RequestBody Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.guardar(empresa);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaEmpresa);
     }
 
+    
     @PutMapping("/{id}")
     public ResponseEntity<Empresa> actualizar(@PathVariable Long id, @RequestBody Empresa empresa) {
         Optional<Empresa> empresaActualizada = empresaService.actualizar(id, empresa);
@@ -68,11 +60,19 @@ public class EmpresaController {
         return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-
     @GetMapping("/email/{email}")
     public ResponseEntity<Empresa> obtenerEmpresaPorEmail(@PathVariable String email) {
-    Optional<Empresa> empresa = empresaService.obtenerPorEmail(email);
-    return empresa.map(ResponseEntity::ok)
-                  .orElseGet(() -> ResponseEntity.notFound().build());
-}
+        Optional<Empresa> empresa = empresaService.obtenerPorEmail(email);
+        return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+
+    @GetMapping("/paginadas")
+    public ResponseEntity<Page<Empresa>> obtenerEmpresasPaginadas(
+          @PageableDefault(page = 0, size = 9) Pageable pageable)
+    {
+        Page<Empresa> empresas = empresaService.obtenerEmpresasPaginadas(pageable);
+        return ResponseEntity.ok(empresas);
+    }
+
 }

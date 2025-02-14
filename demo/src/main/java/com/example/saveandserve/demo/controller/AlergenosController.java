@@ -85,6 +85,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+
 @RequestMapping("/alergenos")
 public class AlergenosController {
 

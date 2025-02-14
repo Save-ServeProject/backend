@@ -1,9 +1,10 @@
 package com.example.saveandserve.demo.service;
-
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,7 @@ public class EmpresaService {
             empresaExistente.setTelefono(empresaActualizada.getTelefono());
             empresaExistente.setCif(empresaActualizada.getCif());
             empresaExistente.setCiudad(empresaActualizada.getCiudad());
+            empresaExistente.setTipo(empresaActualizada.getTipo());
             empresaExistente.setSuscripcion(empresaActualizada.getSuscripcion());
     
             // Solo actualizar la contraseña si se proporciona una nueva
@@ -94,6 +96,12 @@ public class EmpresaService {
 
     public Optional<Empresa> obtenerPorEmail(String email) {
         return empresaRepository.findByEmail(email);
+    }
+
+
+
+    public Page<Empresa> obtenerEmpresasPaginadas(Pageable pageable) {
+        return empresaRepository.findAll(pageable);
     }
 
 }
