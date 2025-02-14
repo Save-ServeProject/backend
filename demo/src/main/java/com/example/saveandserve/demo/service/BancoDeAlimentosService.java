@@ -59,5 +59,9 @@ public class BancoDeAlimentosService {
         return bancoDeAlimentosRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Banco de alimentos no encontrado"));
     }
+
+    public Optional<BancoDeAlimentos> obtenerPorEmail(String email) { 
+        return bancoDeAlimentosRepository.findByEmail(email);
+    }
     
 }
