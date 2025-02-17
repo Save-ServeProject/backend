@@ -105,9 +105,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.example.saveandserve.demo.entity.Donacion;
 import com.example.saveandserve.demo.entity.LineaProducto;
@@ -116,7 +116,6 @@ import com.example.saveandserve.demo.entity.TipoTransporte;
 import com.example.saveandserve.demo.repository.DonacionRepository;
 import com.example.saveandserve.demo.repository.LineaProductoRepository;
 import com.example.saveandserve.demo.repository.ProductoRepository;
-
 
 import jakarta.transaction.Transactional;
 
@@ -233,7 +232,7 @@ public class DonacionService {
     // public List<Donacion> obtenerDonacionesPorEmpresa(Long empresaId) {
     //     return donacionRepository.findByEmpresaId(empresaId);
     // }
-    public List<Donacion> obtenerDonacionesPorEmpresa(Long empresaId) {
+    public List<Donacion> obtenerPorEmpresaId(Long empresaId) {
         try {
             log.info("Buscando donaciones para empresa ID: {}", empresaId);
             List<Donacion> donaciones = donacionRepository.findByEmpresaId(empresaId);
