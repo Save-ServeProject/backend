@@ -313,12 +313,12 @@ public class DemoApplication {
 
             if (transporteRepository.count() == 0) {
                 List<Transporte> transportes = Arrays.asList(
-                        new Transporte(null, "Transportes Norte",
-                                new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.REFRIGERADO))),
-                        new Transporte(null, "Logística Express",
-                                new HashSet<>(Arrays.asList(TipoTransporte.REFRIGERADO, TipoTransporte.CONGELADO))),
-                        new Transporte(null, "Fletes del Sur",
-                                new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.CONGELADO))));
+                    new Transporte(null, "Transportes Norte", new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.REFRIGERADO))),
+                    new Transporte(null, "Logística Express", new HashSet<>(Arrays.asList(TipoTransporte.REFRIGERADO, TipoTransporte.CONGELADO))),
+                    new Transporte(null, "Fletes del Sur", new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.CONGELADO))),
+                    new Transporte(null, "TodoTerreno Express", new HashSet<>(Arrays.asList(TipoTransporte.SECO, TipoTransporte.CONGELADO, TipoTransporte.REFRIGERADO)))
+                   
+                );
                 transporteRepository.saveAll(transportes);
             }
         };

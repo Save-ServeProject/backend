@@ -81,4 +81,9 @@ public class BancoDeAlimentosService {
     //     return bancoDeAlimentosRepository.findAll(pageable);
     // }
     
+
+    public Optional<BancoDeAlimentos> obtenerPorEmail(String email) { 
+        return bancoDeAlimentosRepository.findByEmail(email);
+    }
+    
 }

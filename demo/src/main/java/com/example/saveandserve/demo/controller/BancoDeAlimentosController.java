@@ -13,6 +13,9 @@ import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +68,13 @@ public class BancoDeAlimentosController {
         bancoDeAlimentosService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<BancoDeAlimentos> obtenerBancoAlimentosPorEmail(@PathVariable String email) {
+        Optional<BancoDeAlimentos> bancoAlimentos = bancoDeAlimentosService.obtenerPorEmail(email);
+        return bancoAlimentos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
 
     @GetMapping("/paginadas")
     public ResponseEntity<Page<BancoDeAlimentos>> obtenerBancosPaginados(
