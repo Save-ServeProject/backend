@@ -1,13 +1,21 @@
 package com.example.saveandserve.demo.controller;
 
-import com.example.saveandserve.demo.entity.Donacion;
-import com.example.saveandserve.demo.service.DonacionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.saveandserve.demo.entity.Donacion;
+import com.example.saveandserve.demo.service.DonacionService;
 
 @RestController
 @RequestMapping("/donaciones")
@@ -27,7 +35,13 @@ public class DonacionController {
         Optional<Donacion> donacion = donacionService.obtenerPorId(id);
         return donacion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @GetMapping("/empresa/{empresaId}")
+    public ResponseEntity<List<Donacion>> obtenerPorEmpresa(@PathVariable Long empresaId) {
+        System.out.println("Recibida solicitud de donaciones para empresa ID: " + empresaId);
+        List<Donacion> donaciones = donacionService.obtenerPorEmpresaId(empresaId);
+        System.out.println("Donaciones encontradas: " + donaciones.size());
+        return donaciones.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(donaciones);
+    }
     @PostMapping
     public ResponseEntity<Donacion> registrar(@RequestBody Donacion donacion) {
         Donacion nuevaDonacion = donacionService.registrar(donacion);

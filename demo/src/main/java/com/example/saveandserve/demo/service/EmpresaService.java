@@ -43,7 +43,7 @@ public class EmpresaService {
             empresaExistente.setTipo(empresaActualizada.getTipo());
             empresaExistente.setSuscripcion(empresaActualizada.getSuscripcion());
 
-            if (!passwordEncoder.matches(empresaActualizada.getContrasenia(), empresaExistente.getContrasenia())) {
+            if (empresaActualizada.getContrasenia() != null && !empresaActualizada.getContrasenia().isEmpty())  {
                 empresaExistente.setContrasenia(passwordEncoder.encode(empresaActualizada.getContrasenia()));
             }
 
