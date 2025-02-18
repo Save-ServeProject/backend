@@ -1,5 +1,6 @@
 package com.example.saveandserve.demo.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,4 +76,10 @@ public class EmpresaController {
         return ResponseEntity.ok(empresas);
     }
 
+
+    @GetMapping("/{id}/total-donaciones")
+    public ResponseEntity<BigDecimal> getTotalDonaciones(@PathVariable Long id) {
+        BigDecimal total = empresaService.getTotalDonaciones(id);
+        return ResponseEntity.ok(total != null ? total : BigDecimal.ZERO);
+    }
 }

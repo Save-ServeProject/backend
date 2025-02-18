@@ -1,4 +1,5 @@
 package com.example.saveandserve.demo.service;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,4 +104,7 @@ public class EmpresaService {
         return empresaRepository.findAll(pageable);
     }
 
+    public BigDecimal getTotalDonaciones(Long id) {
+    return empresaRepository.getTotalDonacionesByEmpresaId(id);
+}
 }
